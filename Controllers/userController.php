@@ -18,13 +18,6 @@ class userController
 
     function Insert()
     {
-
-        // $user = new User('NULL', $_POST['ndoc'], $_POST['name'], $_POST['rol'], 
-
-
-        //  $_POST['email'], $_POST['cpassword'], 0);
-
-
         $user = new User();
         $_POST['id']=NULL;
         $user->setUserId($_POST['id']);
@@ -35,7 +28,7 @@ class userController
         $user->setUserPassword($_POST['password']);
         $user->setUserActive($_POST['activo']);
         User::insert($user);
-        
+
         // $this->Show();
     }
 
