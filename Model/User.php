@@ -103,7 +103,7 @@ class User
             $insert->bindValue(':activo', $user->getUserActive());
             $insert->execute();
         } catch (Exception $e) {
-            echo 'Error: ', $e->getMessage();
+            throw new RuntimeException('Error inserting user: ' . $e->getMessage());
         }
 
         /* $insert->execute( array(
@@ -140,8 +140,9 @@ class User
     {
         $db = Db::getConnect();
         $listUsers = [];
-        $select = $db->query('SELECT * FROM usuario WHERE id=:id');
-        $select->bindValue(':id', $id);
+        $select = $db->prepare('SELECT * FROM usuario WHERE id=:id');
+        $select->bindValue(':id', $id, PDO::PARAM_INT);
+        $select->execute();
         foreach ($select->fetchAll() as $user) {
             $users = new User();
             $users->setUserId($user['id']);
@@ -169,7 +170,8 @@ class User
     {
         $db = Db::getConnect();
         $select = $db->prepare('SELECT * FROM usuario WHERE ndoc=:ndoc');
-        $select->bindValue(':id', $id);
+        // Assuming ndoc is a string. If it's an integer, PDO::PARAM_INT should be used.
+        $select->bindValue(':ndoc', $id, PDO::PARAM_STR);
         $select->execute();
         $user = $select->fetch();
         //$user = new User($user['id'], $user['ndoc'], $user['usuario'], $user['rol'], $user['email'], $user['contrasena'], $user['activo']);
